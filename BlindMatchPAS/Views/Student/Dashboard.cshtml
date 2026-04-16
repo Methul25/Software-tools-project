@@ -47,7 +47,7 @@ else
 
     <div class="bg-white rounded-2xl border border-slate-200 border-l-4 @accentClass p-5 mb-4 hover:shadow-md transition-shadow">
       <div class="flex flex-wrap items-start justify-between gap-2 mb-2">
-        <h2 class="font-semibold text-slate-900 text-base">@proposal.Title</h2>
+        <h2 class="font-semibold text-slate-900 text-base break-all">@proposal.Title</h2>
         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold @badgePill">@proposal.Status</span>
       </div>
       <p class="text-sm text-slate-500 mb-3">
@@ -55,8 +55,8 @@ else
         <span class="text-slate-300 mx-2">|</span>
         <i class="fas fa-clock text-slate-400 mr-1"></i>@proposal.SubmittedAt.ToString("dd MMM yyyy")
       </p>
-      <p class="text-sm text-slate-700 mb-3">@proposal.Abstract.Substring(0, Math.Min(200, proposal.Abstract.Length))@(proposal.Abstract.Length > 200 ? "…" : "")</p>
-      <p class="text-xs text-slate-500 mb-2"><i class="fas fa-code text-teal-400 mr-1"></i><strong>Stack:</strong> @proposal.TechnicalStack</p>
+      <p class="text-sm text-slate-700 mb-3 break-all">@proposal.Abstract.Substring(0, Math.Min(200, proposal.Abstract.Length))@(proposal.Abstract.Length > 200 ? "…" : "")</p>
+      <p class="text-xs text-slate-500 mb-2 break-all"><i class="fas fa-code text-teal-400 mr-1"></i><strong>Stack:</strong> @proposal.TechnicalStack</p>
 
         @if (proposal.IsRevealed && proposal.SupervisorName != null)
         {

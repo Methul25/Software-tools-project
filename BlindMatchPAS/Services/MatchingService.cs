@@ -72,6 +72,33 @@ namespace BlindMatchPAS.Services
         }
 
         /// <summary>
+        /// Supervisor withdraws expressed interest; proposal returns to Pending.
+        /// </summary>
+        public async Task<MatchResult> WithdrawInterestAsync(string supervisorId, int proposalId)
+        {
+            var match = await _context.ProjectMatches
+                .Include(m => m.Proposal)
+                .FirstOrDefaultAsync(m => m.ProposalId == proposalId && m.SupervisorId == supervisorId);
+
+            if (match == null)
+                return new MatchResult(false, "No expressed interest found for this proposal.");
+
+            if (match.IsRevealed)
+                return new MatchResult(false, "Cannot withdraw after the match has been confirmed.");
+
+            if (match.Proposal != null)
+            {
+                match.Proposal.Status = ProposalStatus.Pending;
+                match.Proposal.UpdatedAt = DateTime.UtcNow;
+            }
+
+            _context.ProjectMatches.Remove(match);
+            await _context.SaveChangesAsync();
+
+            return new MatchResult(true, "Interest withdrawn. The proposal has been returned to the pool.");
+        }
+
+        /// <summary>
         /// Supervisor confirms the match. Identities are revealed to both parties.
         /// </summary>
         public async Task<MatchResult> ConfirmMatchAsync(string supervisorId, int proposalId, string? note)
@@ -135,17 +162,18 @@ namespace BlindMatchPAS.Services
             if (proposal.Match != null)
                 _context.ProjectMatches.Remove(proposal.Match);
 
+            // IsRevealed remains false — the new supervisor must still confirm the match.
+            // Identity reveal only happens when the supervisor explicitly clicks Confirm.
             var newMatch = new ProjectMatch
             {
                 ProposalId = proposalId,
                 SupervisorId = newSupervisorId,
                 InterestExpressedAt = DateTime.UtcNow,
-                ConfirmedAt = DateTime.UtcNow,
-                IsRevealed = true,
+                IsRevealed = false,
                 SupervisorNote = $"Manually assigned by coordinator."
             };
 
-            proposal.Status = ProposalStatus.Reassigned;
+            proposal.Status = ProposalStatus.UnderReview;
             proposal.UpdatedAt = DateTime.UtcNow;
 
             _context.ProjectMatches.Add(newMatch);

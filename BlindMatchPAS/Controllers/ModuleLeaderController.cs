@@ -2,6 +2,7 @@ using BlindMatchPAS.Data;
 using BlindMatchPAS.Models;
 using BlindMatchPAS.Services;
 using BlindMatchPAS.ViewModels.Admin;
+using BlindMatchPAS.ViewModels.ModuleLeader;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,14 +11,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlindMatchPAS.Controllers
 {
-    [Authorize(Roles = "SystemAdmin")]
-    public class AdminController : Controller
+    [Authorize(Roles = "ModuleLeader")]
+    public class ModuleLeaderController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMatchingService _matchingService;
 
-        public AdminController(
+        public ModuleLeaderController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
             IMatchingService matchingService)
@@ -27,26 +28,113 @@ namespace BlindMatchPAS.Controllers
             _matchingService = matchingService;
         }
 
+        // GET: /ModuleLeader/Dashboard
         public async Task<IActionResult> Dashboard()
         {
             var totalUsers = await _userManager.Users.CountAsync();
             var totalProposals = await _context.ProjectProposals.CountAsync();
-            var totalMatches = await _context.ProjectMatches.CountAsync();
+            var activeAreas = await _context.ResearchAreas.CountAsync(r => r.IsActive);
 
-            var roleNames = new[] { "Student", "Supervisor", "ModuleLeader", "SystemAdmin" };
-            var roleCounts = new Dictionary<string, int>();
-            foreach (var role in roleNames)
+            var confirmedMatches = await _context.ProjectMatches
+                .Include(m => m.Proposal).ThenInclude(p => p!.Student)
+                .Include(m => m.Proposal).ThenInclude(p => p!.ResearchArea)
+                .Include(m => m.Supervisor)
+                .Where(m => m.IsRevealed)
+                .Select(m => new MatchSummaryViewModel
+                {
+                    MatchId = m.Id,
+                    ProposalId = m.ProposalId,
+                    ProposalTitle = m.Proposal!.Title,
+                    StudentName = m.Proposal.Student!.FullName,
+                    StudentEmail = m.Proposal.Student.Email!,
+                    SupervisorName = m.Supervisor!.FullName,
+                    SupervisorEmail = m.Supervisor.Email!,
+                    ResearchArea = m.Proposal.ResearchArea!.Name,
+                    IsConfirmed = true,
+                    ConfirmedAt = m.ConfirmedAt
+                })
+                .ToListAsync();
+
+            var pendingMatches = await _context.ProjectMatches
+                .Include(m => m.Proposal).ThenInclude(p => p!.Student)
+                .Include(m => m.Proposal).ThenInclude(p => p!.ResearchArea)
+                .Include(m => m.Supervisor)
+                .Where(m => !m.IsRevealed)
+                .Select(m => new MatchSummaryViewModel
+                {
+                    MatchId = m.Id,
+                    ProposalId = m.ProposalId,
+                    ProposalTitle = m.Proposal!.Title,
+                    StudentName = m.Proposal.Student!.FullName,
+                    StudentEmail = m.Proposal.Student.Email!,
+                    SupervisorName = m.Supervisor!.FullName,
+                    SupervisorEmail = m.Supervisor.Email!,
+                    ResearchArea = m.Proposal.ResearchArea!.Name,
+                    IsConfirmed = false
+                })
+                .ToListAsync();
+
+            var unmatchedProposals = await _context.ProjectProposals
+                .Include(p => p.ResearchArea)
+                .Include(p => p.Student)
+                .Where(p => p.Status == ProposalStatus.Pending && p.Match == null)
+                .Select(p => new ProposalSummaryViewModel
+                {
+                    ProposalId = p.Id,
+                    Title = p.Title,
+                    StudentName = p.Student!.FullName,
+                    ResearchArea = p.ResearchArea!.Name,
+                    Status = p.Status
+                })
+                .ToListAsync();
+
+            var vm = new ModuleLeaderDashboardViewModel
             {
-                var usersInRole = await _userManager.GetUsersInRoleAsync(role);
-                roleCounts[role] = usersInRole.Count;
-            }
+                TotalUsers = totalUsers,
+                TotalProposals = totalProposals,
+                ActiveResearchAreas = activeAreas,
+                ConfirmedMatches = confirmedMatches,
+                PendingMatches = pendingMatches,
+                UnmatchedProposals = unmatchedProposals
+            };
 
-            ViewBag.TotalUsers = totalUsers;
-            ViewBag.TotalProposals = totalProposals;
-            ViewBag.TotalMatches = totalMatches;
-            ViewBag.RoleCounts = roleCounts;
+            return View(vm);
+        }
 
-            return View();
+        // --- Research Area Management ---
+
+        [HttpGet]
+        public async Task<IActionResult> ResearchAreas()
+        {
+            var areas = await _context.ResearchAreas.OrderBy(r => r.Name).ToListAsync();
+            return View(areas);
+        }
+
+        [HttpGet]
+        public IActionResult CreateResearchArea() => View(new ResearchArea());
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateResearchArea(ResearchArea model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            _context.ResearchAreas.Add(model);
+            await _context.SaveChangesAsync();
+            TempData["Success"] = "Research area created.";
+            return RedirectToAction(nameof(ResearchAreas));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleResearchArea(int id)
+        {
+            var area = await _context.ResearchAreas.FindAsync(id);
+            if (area == null) return NotFound();
+
+            area.IsActive = !area.IsActive;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(ResearchAreas));
         }
 
         // --- User Management ---
@@ -54,8 +142,7 @@ namespace BlindMatchPAS.Controllers
         [HttpGet]
         public async Task<IActionResult> Users(string? role, string? search)
         {
-            var users = _userManager.Users.OrderBy(u => u.FullName);
-            var allUsers = await users.ToListAsync();
+            var allUsers = await _userManager.Users.OrderBy(u => u.FullName).ToListAsync();
             var userRoles = new Dictionary<string, IList<string>>();
             foreach (var user in allUsers)
                 userRoles[user.Id] = await _userManager.GetRolesAsync(user);
@@ -80,6 +167,7 @@ namespace BlindMatchPAS.Controllers
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null) return NotFound();
+
             var currentId = _userManager.GetUserId(User);
             if (user.Id == currentId)
             {
@@ -87,7 +175,14 @@ namespace BlindMatchPAS.Controllers
                 return RedirectToAction(nameof(Users));
             }
 
-            // Delete related matches first, then proposals (FK constraint)
+            // Prevent deleting SystemAdmin or other ModuleLeaders
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Contains("SystemAdmin") || roles.Contains("ModuleLeader"))
+            {
+                TempData["Error"] = "Cannot delete admin-level accounts.";
+                return RedirectToAction(nameof(Users));
+            }
+
             var proposals = await _context.ProjectProposals
                 .Include(p => p.Match)
                 .Where(p => p.StudentId == id)
@@ -98,7 +193,7 @@ namespace BlindMatchPAS.Controllers
                     _context.ProjectMatches.Remove(proposal.Match);
                 _context.ProjectProposals.Remove(proposal);
             }
-            // Also remove supervised matches
+
             var supervisedMatches = await _context.ProjectMatches
                 .Where(m => m.SupervisorId == id)
                 .ToListAsync();
@@ -113,10 +208,7 @@ namespace BlindMatchPAS.Controllers
         [HttpGet]
         public IActionResult CreateUser()
         {
-            var vm = new CreateUserViewModel
-            {
-                Roles = GetRoleSelectList()
-            };
+            var vm = new CreateUserViewModel { Roles = GetRoleSelectList() };
             return View(vm);
         }
 
@@ -158,42 +250,6 @@ namespace BlindMatchPAS.Controllers
             return RedirectToAction(nameof(Users));
         }
 
-        // --- Research Area Management ---
-
-        [HttpGet]
-        public async Task<IActionResult> ResearchAreas()
-        {
-            var areas = await _context.ResearchAreas.OrderBy(r => r.Name).ToListAsync();
-            return View(areas);
-        }
-
-        [HttpGet]
-        public IActionResult CreateResearchArea() => View(new ResearchArea());
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateResearchArea(ResearchArea model)
-        {
-            if (!ModelState.IsValid) return View(model);
-
-            _context.ResearchAreas.Add(model);
-            await _context.SaveChangesAsync();
-            TempData["Success"] = "Research area created.";
-            return RedirectToAction(nameof(ResearchAreas));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ToggleResearchArea(int id)
-        {
-            var area = await _context.ResearchAreas.FindAsync(id);
-            if (area == null) return NotFound();
-
-            area.IsActive = !area.IsActive;
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(ResearchAreas));
-        }
-
         // --- Reassignment ---
 
         [HttpGet]
@@ -227,8 +283,8 @@ namespace BlindMatchPAS.Controllers
                 return View(model);
             }
 
-            var adminId = _userManager.GetUserId(User)!;
-            var success = await _matchingService.ReassignProposalAsync(model.ProposalId, model.NewSupervisorId, adminId);
+            var leaderId = _userManager.GetUserId(User)!;
+            var success = await _matchingService.ReassignProposalAsync(model.ProposalId, model.NewSupervisorId, leaderId);
 
             TempData[success ? "Success" : "Error"] = success
                 ? "Proposal reassigned successfully."
@@ -237,12 +293,12 @@ namespace BlindMatchPAS.Controllers
             return RedirectToAction(nameof(Dashboard));
         }
 
+        // Module Leader can only create Students and Supervisors
         private static IEnumerable<SelectListItem> GetRoleSelectList() =>
             new List<SelectListItem>
             {
                 new("Student", "Student"),
-                new("Supervisor", "Supervisor"),
-                new("Module Leader", "ModuleLeader")
+                new("Supervisor", "Supervisor")
             };
     }
 }

@@ -44,14 +44,21 @@
             <li><a asp-controller="Supervisor" asp-action="ManageExpertise" class="text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg gap-2 font-semibold text-sm">
               <i class="fas fa-tags text-teal-500"></i>Expertise</a></li>
           }
-          @if (User.IsInRole("ModuleLeader") || User.IsInRole("SystemAdmin"))
+          @if (User.IsInRole("ModuleLeader"))
+          {
+            <li><a asp-controller="ModuleLeader" asp-action="Dashboard" class="text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg gap-2 font-semibold text-sm">
+              <i class="fas fa-chart-bar text-indigo-500"></i>Allocations</a></li>
+            <li><a asp-controller="ModuleLeader" asp-action="ResearchAreas" class="text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg gap-2 font-semibold text-sm">
+              <i class="fas fa-flask text-indigo-500"></i>Research Areas</a></li>
+            <li><a asp-controller="ModuleLeader" asp-action="Users" class="text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg gap-2 font-semibold text-sm">
+              <i class="fas fa-users text-indigo-500"></i>Users</a></li>
+          }
+          @if (User.IsInRole("SystemAdmin"))
           {
             <li><a asp-controller="Admin" asp-action="Dashboard" class="text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg gap-2 font-semibold text-sm">
-              <i class="fas fa-chart-bar text-teal-500"></i>Allocations</a></li>
-            <li><a asp-controller="Admin" asp-action="ResearchAreas" class="text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg gap-2 font-semibold text-sm">
-              <i class="fas fa-flask text-teal-500"></i>Research Areas</a></li>
+              <i class="fas fa-shield-alt text-slate-500"></i>System Admin</a></li>
             <li><a asp-controller="Admin" asp-action="Users" class="text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg gap-2 font-semibold text-sm">
-              <i class="fas fa-users text-teal-500"></i>Users</a></li>
+              <i class="fas fa-users text-slate-500"></i>Users</a></li>
           }
         </ul>
       </div>
@@ -78,11 +85,16 @@
             <li><a asp-controller="Supervisor" asp-action="Browse" class="text-slate-700 font-medium"><i class="fas fa-search text-teal-500"></i>Browse</a></li>
             <li><a asp-controller="Supervisor" asp-action="ManageExpertise" class="text-slate-700 font-medium"><i class="fas fa-tags text-teal-500"></i>Expertise</a></li>
           }
-          @if (User.IsInRole("ModuleLeader") || User.IsInRole("SystemAdmin"))
+          @if (User.IsInRole("ModuleLeader"))
           {
-            <li><a asp-controller="Admin" asp-action="Dashboard" class="text-slate-700 font-medium"><i class="fas fa-chart-bar text-teal-500"></i>Allocations</a></li>
-            <li><a asp-controller="Admin" asp-action="ResearchAreas" class="text-slate-700 font-medium"><i class="fas fa-flask text-teal-500"></i>Research Areas</a></li>
-            <li><a asp-controller="Admin" asp-action="Users" class="text-slate-700 font-medium"><i class="fas fa-users text-teal-500"></i>Users</a></li>
+            <li><a asp-controller="ModuleLeader" asp-action="Dashboard" class="text-slate-700 font-medium"><i class="fas fa-chart-bar text-indigo-500"></i>Allocations</a></li>
+            <li><a asp-controller="ModuleLeader" asp-action="ResearchAreas" class="text-slate-700 font-medium"><i class="fas fa-flask text-indigo-500"></i>Research Areas</a></li>
+            <li><a asp-controller="ModuleLeader" asp-action="Users" class="text-slate-700 font-medium"><i class="fas fa-users text-indigo-500"></i>Users</a></li>
+          }
+          @if (User.IsInRole("SystemAdmin"))
+          {
+            <li><a asp-controller="Admin" asp-action="Dashboard" class="text-slate-700 font-medium"><i class="fas fa-shield-alt text-slate-500"></i>System Admin</a></li>
+            <li><a asp-controller="Admin" asp-action="Users" class="text-slate-700 font-medium"><i class="fas fa-users text-slate-500"></i>Users</a></li>
           }
         </ul>
       </div>

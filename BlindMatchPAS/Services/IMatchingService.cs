@@ -6,6 +6,7 @@ namespace BlindMatchPAS.Services
     {
         Task<IEnumerable<ProjectProposal>> GetProposalsForSupervisorAsync(string supervisorId);
         Task<MatchResult> ExpressInterestAsync(string supervisorId, int proposalId);
+        Task<MatchResult> WithdrawInterestAsync(string supervisorId, int proposalId);
         Task<MatchResult> ConfirmMatchAsync(string supervisorId, int proposalId, string? note);
         Task<bool> IsProposalAvailableForMatchingAsync(int proposalId);
         Task<ProjectMatch?> GetMatchForProposalAsync(int proposalId);

@@ -28,12 +28,14 @@ The database (`BlindMatchPAS.db`) is created and seeded automatically on first r
 
 ## Default Accounts
 
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@blindmatch.com | Admin@123 |
-| Supervisor | supervisor@blindmatch.com | Super@123 |
+| Role | Email | Password | Notes |
+|------|-------|----------|-------|
+| SystemAdmin | admin@blindmatch.ac.lk | Admin@12345 | Seeded on first run |
+| ModuleLeader | moduleleader@blindmatch.ac.lk | Leader@12345 | Seeded on first run |
+| Supervisor | *(set on creation)* | *(set on creation)* | Created via ModuleLeader dashboard |
+| Student | *(set on creation)* | *(set on creation)* | Created via ModuleLeader dashboard |
 
-Student accounts are created by Admin via the dashboard.
+> Supervisor and Student accounts are created by the ModuleLeader (or SystemAdmin) via `/ModuleLeader/CreateUser`.
 
 ## Project Structure
 
@@ -45,7 +47,7 @@ BlindMatchPAS/
 ├── ViewModels/        # Typed view models
 ├── Services/          # Matching logic
 ├── Data/              # DbContext + seeder
-└── Areas/Identity/    # Auth (login/register)
+└── Areas/Identity/    # Auth (login only)
 ```
 
 ## Useful Commands

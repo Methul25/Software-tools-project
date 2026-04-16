@@ -45,13 +45,27 @@ namespace BlindMatchPAS.Controllers
         public async Task<IActionResult> Browse(int? researchAreaId)
         {
             var supervisorId = _userManager.GetUserId(User)!;
-            var proposals = await _matchingService.GetProposalsForSupervisorAsync(supervisorId);
+
+            var proposals = await _context.ProjectProposals
+                .Include(p => p.ResearchArea)
+                .Where(p =>
+                    (p.Status == ProposalStatus.Pending || p.Status == ProposalStatus.UnderReview) &&
+                    p.Match == null)
+                .OrderByDescending(p => p.SubmittedAt)
+                .ToListAsync();
 
             if (researchAreaId.HasValue)
-                proposals = proposals.Where(p => p.ResearchAreaId == researchAreaId.Value);
+                proposals = proposals.Where(p => p.ResearchAreaId == researchAreaId.Value).ToList();
 
             var viewModels = proposals.Select(ToAnonymousViewModel).ToList();
-            ViewBag.ResearchAreas = await GetSupervisorExpertiseAreasAsync(supervisorId);
+
+            // All active research areas for the filter dropdown
+            ViewBag.ResearchAreas = await _context.ResearchAreas
+                .Where(r => r.IsActive)
+                .OrderBy(r => r.Name)
+                .Select(r => r.Name)
+                .ToListAsync();
+
             ViewBag.SelectedAreaId = researchAreaId;
             return View(viewModels);
         }
@@ -67,14 +81,54 @@ namespace BlindMatchPAS.Controllers
             return RedirectToAction(nameof(Browse));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> WithdrawInterest(int proposalId)
+        {
+            var supervisorId = _userManager.GetUserId(User)!;
+            var result = await _matchingService.WithdrawInterestAsync(supervisorId, proposalId);
+
+            TempData[result.Success ? "Success" : "Error"] = result.Message;
+            return RedirectToAction(nameof(Dashboard));
+        }
+
         [HttpGet]
         public async Task<IActionResult> ProposalDetail(int id)
         {
-            var supervisorId = _userManager.GetUserId(User)!;
-            var proposals = await _matchingService.GetProposalsForSupervisorAsync(supervisorId);
-            var proposal = proposals.FirstOrDefault(p => p.Id == id);
+            // Fetch directly — no expertise filter, student identity excluded via ViewModel
+            var proposal = await _context.ProjectProposals
+                .Include(p => p.ResearchArea)
+                .Where(p => p.Id == id &&
+                            (p.Status == ProposalStatus.Pending || p.Status == ProposalStatus.UnderReview) &&
+                            p.Match == null)
+                .FirstOrDefaultAsync();
+
             if (proposal == null) return NotFound();
             return View(ToAnonymousViewModel(proposal));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmedProposalDetail(int proposalId)
+        {
+            var supervisorId = _userManager.GetUserId(User)!;
+
+            // Only reachable by the supervisor who owns the confirmed match
+            var match = await _context.ProjectMatches
+                .Include(m => m.Proposal).ThenInclude(p => p!.ResearchArea)
+                .Include(m => m.Proposal).ThenInclude(p => p!.Student)
+                .FirstOrDefaultAsync(m => m.ProposalId == proposalId &&
+                                          m.SupervisorId == supervisorId &&
+                                          m.IsRevealed);
+
+            if (match == null || match.Proposal == null) return NotFound();
+
+            ViewBag.StudentName  = match.Proposal.Student?.FullName ?? "Unknown";
+            ViewBag.StudentEmail = match.Proposal.Student?.Email ?? string.Empty;
+            ViewBag.StudentIdNo  = match.Proposal.Student?.StudentId;
+            ViewBag.Note         = match.SupervisorNote;
+            ViewBag.ConfirmedAt  = match.ConfirmedAt;
+
+            return View(match.Proposal);
         }
 
         [HttpGet]

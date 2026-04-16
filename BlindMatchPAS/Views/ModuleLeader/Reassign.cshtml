@@ -1,4 +1,5 @@
-﻿@model ReassignProposalViewModel
+@using BlindMatchPAS.ViewModels.Admin
+@model ReassignProposalViewModel
 @{
     ViewData["Title"] = "Reassign Proposal";
 }
@@ -7,8 +8,8 @@
   <div class="w-full max-w-lg">
     <div class="card bg-white shadow-md border-0">
       <div class="card-body p-0">
-        <div class="flex items-center gap-3 bg-gradient-to-r from-slate-900 to-teal-900 px-6 py-4 rounded-t-2xl" style="color:#ffffff">
-          <i class="fas fa-exchange-alt text-warning text-lg"></i>
+        <div class="flex items-center gap-3 bg-gradient-to-r from-slate-900 to-indigo-900 px-6 py-4 rounded-t-2xl" style="color:#ffffff">
+          <i class="fas fa-exchange-alt text-yellow-300 text-lg"></i>
           <h2 class="text-lg font-bold">Reassign / Assign Proposal</h2>
         </div>
         <div class="p-6">
@@ -21,7 +22,7 @@
             <p class="font-medium text-gray-700">@(Model.CurrentSupervisorName ?? "—")</p>
           </div>
 
-          <form asp-action="Reassign" method="post" class="space-y-4">
+          <form asp-controller="ModuleLeader" asp-action="Reassign" method="post" class="space-y-4">
             @Html.AntiForgeryToken()
             <input type="hidden" asp-for="ProposalId" />
             <input type="hidden" asp-for="ProposalTitle" />
@@ -30,7 +31,7 @@
             <div class="form-control">
               <label asp-for="NewSupervisorId" class="label"><span class="label-text font-semibold text-[#1A2E4A]">New Supervisor</span></label>
               <select asp-for="NewSupervisorId" asp-items="Model.Supervisors"
-                      class="select select-bordered w-full focus:border-[#00A8A8] focus:outline-none">
+                      class="select select-bordered w-full focus:border-indigo-400 focus:outline-none">
                 <option value="">-- Select supervisor --</option>
               </select>
               <span asp-validation-for="NewSupervisorId" class="text-error text-xs mt-1 block"></span>
@@ -42,7 +43,7 @@
                       onclick="return confirm('This will override the current match. Continue?')">
                 <i class="fas fa-check"></i>Confirm Reassignment
               </button>
-              <a asp-action="Dashboard" class="btn btn-outline text-gray-600">Cancel</a>
+              <a asp-controller="ModuleLeader" asp-action="Dashboard" class="btn btn-outline text-gray-600">Cancel</a>
             </div>
           </form>
         </div>
@@ -52,6 +53,3 @@
 </div>
 
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }
-
-
-

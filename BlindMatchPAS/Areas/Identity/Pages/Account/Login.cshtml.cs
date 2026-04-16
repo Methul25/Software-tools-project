@@ -125,8 +125,9 @@ namespace BlindMatchPAS.Areas.Identity.Pages.Account
                             return LocalRedirect("/Student/Dashboard");
                         if (await _userManager.IsInRoleAsync(user, "Supervisor"))
                             return LocalRedirect("/Supervisor/Dashboard");
-                        if (await _userManager.IsInRoleAsync(user, "ModuleLeader") ||
-                            await _userManager.IsInRoleAsync(user, "SystemAdmin"))
+                        if (await _userManager.IsInRoleAsync(user, "ModuleLeader"))
+                            return LocalRedirect("/ModuleLeader/Dashboard");
+                        if (await _userManager.IsInRoleAsync(user, "SystemAdmin"))
                             return LocalRedirect("/Admin/Dashboard");
                     }
                     return LocalRedirect(returnUrl);

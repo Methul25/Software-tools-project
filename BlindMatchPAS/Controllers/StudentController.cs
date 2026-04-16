@@ -1,6 +1,5 @@
 using BlindMatchPAS.Data;
 using BlindMatchPAS.Models;
-using BlindMatchPAS.Services;
 using BlindMatchPAS.ViewModels.Student;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
