@@ -168,14 +168,23 @@
 <!-- ══════════════════ ROLES OVERVIEW ══════════════════ -->
 <h2>Roles, Responsibilities &amp; Files to Upload</h2>
 
-<p>Each member is responsible for ensuring their owned files are committed and pushed to the repository <strong>before</strong> the presentation. The table below maps each member to their presentation role, the report sections they cover, and the exact files they must have uploaded to Git.</p>
+<div class="note" style="border-left-color:#c0392b; background:#fff5f5;">
+  <strong>&#x1F4CB; Group documentation files &mdash; every member must confirm these are pushed, but they are not assigned to one individual:</strong><br/>
+  <code>README.md</code> &nbsp;&bull;&nbsp;
+  <code>TechnicalReport.html</code> &nbsp;&bull;&nbsp;
+  <code>PRESENTATION_SCRIPT.html</code> &nbsp;&bull;&nbsp;
+  <code>GIT_COMMIT_HISTORY.sh</code>
+  <br/>Run <code>git log --oneline</code> and confirm all four files are present in the repository before the presentation.
+</div>
+
+<p>Each member owns a distinct set of <strong>source code files</strong>. These must be committed and pushed to the repository <strong>before</strong> the presentation. The table below is the authoritative assignment.</p>
 
 <table class="data">
   <tr>
     <th>Member</th>
     <th>Role Title</th>
     <th>Sections Covered</th>
-    <th>Files to Commit / Upload to Git</th>
+    <th>Source Code Files to Commit / Upload to Git</th>
     <th>Time</th>
   </tr>
   <tr>
@@ -183,12 +192,151 @@
     <td>MC &amp; Introduction</td>
     <td>Opens presentation; introduces team; frames the problem</td>
     <td>
-      <code>README.md</code><br/>
-      <code>TechnicalReport.html</code><br/>
-      <code>PRESENTATION_SCRIPT.html</code>
+      <code>BlindMatchPAS/Views/Home/Index.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/_ViewImports.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/_ViewStart.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Shared/_Layout.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Shared/_AuthLayout.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Shared/_LoginPartial.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Shared/_ValidationScriptsPartial.cshtml</code><br/>
+      <code>BlindMatchPAS/Areas/Identity/Pages/Account/Login.cshtml</code><br/>
+      <code>BlindMatchPAS/Areas/Identity/Pages/Account/Login.cshtml.cs</code><br/>
+      <code>BlindMatchPAS/Areas/Identity/Pages/Account/Register.cshtml</code><br/>
+      <code>BlindMatchPAS/Areas/Identity/Pages/Account/Register.cshtml.cs</code><br/>
+      <code>BlindMatchPAS/Areas/Identity/Pages/Account/_ViewImports.cshtml</code><br/>
+      <code>BlindMatchPAS/Areas/Identity/Pages/_ViewImports.cshtml</code><br/>
+      <code>BlindMatchPAS/Areas/Identity/Pages/_ViewStart.cshtml</code><br/>
+      <code>BlindMatchPAS/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml</code>
     </td>
     <td>~2 min</td>
   </tr>
+  <tr>
+    <td><strong>Member 2</strong></td>
+    <td>Architecture &amp; Environment</td>
+    <td>Section 1 — Tech stack, MVC pattern, DI, RBAC, service layer</td>
+    <td>
+      <code>BlindMatchPAS/Program.cs</code><br/>
+      <code>BlindMatchPAS/appsettings.json</code><br/>
+      <code>BlindMatchPAS/appsettings.Development.json</code><br/>
+      <code>BlindMatchPAS/BlindMatchPAS.csproj</code><br/>
+      <code>BlindMatchPAS.sln</code><br/>
+      <code>.gitignore</code><br/>
+      <code>BlindMatchPAS/Views/ModuleLeader/Dashboard.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/ModuleLeader/CreateUser.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/ModuleLeader/Reassign.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/ModuleLeader/Users.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/ModuleLeader/CreateResearchArea.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/ModuleLeader/ResearchAreas.cshtml</code>
+    </td>
+    <td>~2 min</td>
+  </tr>
+  <tr>
+    <td><strong>Member 3</strong></td>
+    <td>Blind-Match Logic &amp; State Machine</td>
+    <td>Section 2 — ProposalStatus enum, IsRevealed flag, dual-layer anonymity</td>
+    <td>
+      <code>BlindMatchPAS/Models/ApplicationUser.cs</code><br/>
+      <code>BlindMatchPAS/Models/ProjectMatch.cs</code><br/>
+      <code>BlindMatchPAS/Models/ProjectProposal.cs</code><br/>
+      <code>BlindMatchPAS/Models/ProposalStatus.cs</code><br/>
+      <code>BlindMatchPAS/Models/ResearchArea.cs</code><br/>
+      <code>BlindMatchPAS/Models/SupervisorExpertise.cs</code><br/>
+      <code>BlindMatchPAS/Services/IMatchingService.cs</code><br/>
+      <code>BlindMatchPAS/Services/MatchingService.cs</code>
+    </td>
+    <td>~2 min</td>
+  </tr>
+  <tr>
+    <td><strong>Member 4</strong></td>
+    <td>Live Demo</td>
+    <td>Running application — student submit, supervisor browse &amp; confirm, admin reassign</td>
+    <td>
+      <code>BlindMatchPAS/Views/Student/Submit.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Student/Dashboard.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Student/Edit.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Supervisor/Browse.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Supervisor/Dashboard.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Supervisor/ProposalDetail.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Supervisor/ConfirmMatch.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Supervisor/ConfirmedProposalDetail.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Supervisor/ManageExpertise.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Admin/Dashboard.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Admin/Reassign.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Admin/CreateUser.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Admin/CreateResearchArea.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Admin/ResearchAreas.cshtml</code><br/>
+      <code>BlindMatchPAS/Views/Admin/Users.cshtml</code><br/>
+      <code>BlindMatchPAS/wwwroot/css/site.css</code><br/>
+      <code>BlindMatchPAS/wwwroot/js/site.js</code>
+    </td>
+    <td>~2 min</td>
+  </tr>
+  <tr>
+    <td><strong>Member 5</strong></td>
+    <td>Version Control Strategy</td>
+    <td>Section 3 — Conventional Commits, sprint-driven flow, git log evidence</td>
+    <td>
+      <code>BlindMatchPAS/Data/ApplicationDbContext.cs</code><br/>
+      <code>BlindMatchPAS/Data/DbInitializer.cs</code><br/>
+      <code>BlindMatchPAS/Migrations/20260412141355_InitialCreate.cs</code><br/>
+      <code>BlindMatchPAS/Migrations/20260412141355_InitialCreate.Designer.cs</code><br/>
+      <code>BlindMatchPAS/Migrations/ApplicationDbContextModelSnapshot.cs</code>
+    </td>
+    <td>~2 min</td>
+  </tr>
+  <tr>
+    <td><strong>Member 6</strong></td>
+    <td>Testing Overview &amp; Unit Tests</td>
+    <td>Sections 4.1 &amp; 4.2 — 90-test suite introduction, MatchingServiceTests, StudentControllerTests</td>
+    <td>
+      <code>BlindMatchPAS.Tests/BlindMatchPAS.Tests.csproj</code><br/>
+      <code>BlindMatchPAS.Tests/Helpers/TestDbContextFactory.cs</code><br/>
+      <code>BlindMatchPAS.Tests/Helpers/MockUserManagerHelper.cs</code><br/>
+      <code>BlindMatchPAS.Tests/Unit/MatchingServiceTests.cs</code><br/>
+      <code>BlindMatchPAS.Tests/Unit/StudentControllerTests.cs</code>
+    </td>
+    <td>~2 min</td>
+  </tr>
+  <tr>
+    <td><strong>Member 7</strong></td>
+    <td>Integration, Mock &amp; Functional Tests</td>
+    <td>Sections 4.3, 4.4 &amp; 4.5 — database tests, Moq tests, end-to-end journeys</td>
+    <td>
+      <code>BlindMatchPAS.Tests/Integration/DatabaseIntegrationTests.cs</code><br/>
+      <code>BlindMatchPAS.Tests/Integration/ProposalRepositoryTests.cs</code><br/>
+      <code>BlindMatchPAS.Tests/Mocks/SupervisorControllerMockTests.cs</code><br/>
+      <code>BlindMatchPAS.Tests/Functional/BlindMatchUserJourneyTests.cs</code>
+    </td>
+    <td>~2 min</td>
+  </tr>
+  <tr>
+    <td><strong>Member 8</strong></td>
+    <td>Critical Evaluation, Challenges &amp; Conclusion</td>
+    <td>Sections 4.6, 5 &amp; 6 — test metrics, 5 challenges, commit evidence, conclusion</td>
+    <td>
+      <code>BlindMatchPAS/Controllers/AdminController.cs</code><br/>
+      <code>BlindMatchPAS/Controllers/HomeController.cs</code><br/>
+      <code>BlindMatchPAS/Controllers/ModuleLeaderController.cs</code><br/>
+      <code>BlindMatchPAS/Controllers/StudentController.cs</code><br/>
+      <code>BlindMatchPAS/Controllers/SupervisorController.cs</code><br/>
+      <code>BlindMatchPAS/ViewModels/Admin/AdminViewModels.cs</code><br/>
+      <code>BlindMatchPAS/ViewModels/ModuleLeader/ModuleLeaderViewModels.cs</code><br/>
+      <code>BlindMatchPAS/ViewModels/Student/ProposalStatusViewModel.cs</code><br/>
+      <code>BlindMatchPAS/ViewModels/Student/SubmitProposalViewModel.cs</code><br/>
+      <code>BlindMatchPAS/ViewModels/Supervisor/SupervisorViewModels.cs</code>
+    </td>
+    <td>~2 min</td>
+  </tr>
+</table>
+
+<div class="note">
+  <strong>Before the presentation day — checklist for every member:</strong><br/>
+  1. Run <code>git status</code> — confirm all your files show as clean (no unstaged changes).<br/>
+  2. Run <code>git log --oneline -5</code> — confirm your latest commit is visible.<br/>
+  3. Check <strong>github.com/Methul25/Software-tools-project</strong> in a browser — your files must appear there.<br/>
+  4. If you see <em>untracked</em> or <em>modified</em> files: <code>git add &lt;file&gt;</code> &rarr; <code>git commit -m "..."</code> &rarr; <code>git push origin main</code>.<br/>
+  5. <strong>Never commit</strong>: <code>bin/</code>, <code>obj/</code>, <code>*.db</code>, <code>*.db-shm</code>, <code>*.db-wal</code>.
+</div>
   <tr>
     <td><strong>Member 2</strong></td>
     <td>Architecture &amp; Environment</td>
@@ -324,16 +472,30 @@
   </div>
   <div class="speaker-body">
     <div class="files-box">
-      <strong>&#x1F4C2; Your files to commit &amp; push to Git:</strong>
-      <code>README.md</code> &nbsp;&bull;&nbsp;
-      <code>TechnicalReport.html</code> &nbsp;&bull;&nbsp;
-      <code>PRESENTATION_SCRIPT.html</code>
+      <strong>&#x1F4C2; Your source code files to commit &amp; push to Git:</strong>
+      <code>BlindMatchPAS/Views/Home/Index.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/_ViewImports.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/_ViewStart.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/Shared/_Layout.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/Shared/_AuthLayout.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/Shared/_LoginPartial.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/Shared/_ValidationScriptsPartial.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Areas/Identity/Pages/Account/Login.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Areas/Identity/Pages/Account/Login.cshtml.cs</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Areas/Identity/Pages/Account/Register.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Areas/Identity/Pages/Account/Register.cshtml.cs</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Areas/Identity/Pages/_ViewImports.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Areas/Identity/Pages/_ViewStart.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml</code>
     </div>
     <div class="cue">[SLIDE: Title slide &mdash; "BlindMatchPAS: A Blind-Match Project Approval System | PUSL2020 | Group N"]</div>
     <p class="script">Good morning / good afternoon. My name is [NAME], and on behalf of our team, welcome to the presentation of BlindMatchPAS &mdash; our submission for PUSL2020: Software Development Tools and Practices.</p>
     <p class="script">The question we started with was this: in a university setting, when supervisors see a list of project proposals alongside student names and IDs, do they choose the proposal on merit, or on familiarity? Research by Hinton (2015) shows that unconscious affinity bias is real and measurable. Our system removes that variable entirely.</p>
     <p class="script">BlindMatchPAS is a fully functional web application that separates the act of <em>selecting</em> a proposal from the act of <em>knowing who wrote it</em>. A supervisor reviews, shortlists, and confirms a match before the student's identity is ever shown. The reveal only happens at the moment of mutual confirmation &mdash; by design, at the database level, not just the UI level.</p>
     <p class="script">Today we will walk you through the system architecture, the matching logic, a live demonstration, our version control strategy, and a comprehensive testing suite comprising 90 tests across four distinct layers. Each of my colleagues owns a specific area, and together we will cover every aspect of our technical report.</p>
+    <div class="cue">[SLIDE or SCREEN: Show the home page and shared layout in the browser or editor]</div>
+    <p class="script">My own contribution to the codebase is the <strong>UI shell</strong> &mdash; the parts of the application that every user sees regardless of their role. Specifically, I built the shared <code>_Layout.cshtml</code>, which provides the navigation bar, role-sensitive menu links, and the consistent page wrapper used throughout the app. I also built the separate <code>_AuthLayout.cshtml</code> used on login and registration pages, where a minimal, centred layout is more appropriate than the main nav.</p>
+    <p class="script">Alongside the layout, I authored the two <strong>ASP.NET Core Identity account pages</strong>: <code>Login.cshtml</code> and <code>Register.cshtml</code>, each backed by a PageModel class. These scaffold into the Identity middleware pipeline &mdash; so authentication, password hashing, and session cookie management are handled by the framework, and the pages I wrote are purely the UI and input-validation layer on top. The <code>_LoginPartial.cshtml</code> and <code>_ValidationScriptsPartial.cshtml</code> components are also mine &mdash; they inject the login/logout link into the nav bar and ensure client-side validation is wired up consistently across all forms.</p>
     <div class="transition">[Hand over] "I'll begin by passing to [NAME 2], who will walk you through the technology choices and architecture we used to build this."</div>
   </div>
 </div>
@@ -347,13 +509,19 @@
   </div>
   <div class="speaker-body">
     <div class="files-box">
-      <strong>&#x1F4C2; Your files to commit &amp; push to Git:</strong>
+      <strong>&#x1F4C2; Your source code files to commit &amp; push to Git:</strong>
       <code>BlindMatchPAS/Program.cs</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/appsettings.json</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/appsettings.Development.json</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/BlindMatchPAS.csproj</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS.sln</code> &nbsp;&bull;&nbsp;
-      <code>.gitignore</code>
+      <code>.gitignore</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/ModuleLeader/Dashboard.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/ModuleLeader/CreateUser.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/ModuleLeader/Reassign.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/ModuleLeader/Users.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/ModuleLeader/CreateResearchArea.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/ModuleLeader/ResearchAreas.cshtml</code>
     </div>
     <div class="cue">[SLIDE: Project structure diagram or tech-stack list &mdash; ASP.NET Core 8 / EF Core / SQLite / Identity / xUnit]</div>
     <p class="script">Thank you, [NAME 1]. BlindMatchPAS is built on <strong>ASP.NET Core 8 MVC</strong>. We chose this framework because it enforces separation of concerns natively, has built-in Identity for role-based access control, and the dependency injection container is first-class &mdash; which had a direct positive impact on our testing strategy.</p>
@@ -373,11 +541,11 @@
   </div>
   <div class="speaker-body">
     <div class="files-box">
-      <strong>&#x1F4C2; Your files to commit &amp; push to Git:</strong>
-      <code>BlindMatchPAS/Models/ProposalStatus.cs</code> &nbsp;&bull;&nbsp;
+      <strong>&#x1F4C2; Your source code files to commit &amp; push to Git:</strong>
+      <code>BlindMatchPAS/Models/ApplicationUser.cs</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Models/ProjectMatch.cs</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Models/ProjectProposal.cs</code> &nbsp;&bull;&nbsp;
-      <code>BlindMatchPAS/Models/ApplicationUser.cs</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Models/ProposalStatus.cs</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Models/ResearchArea.cs</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Models/SupervisorExpertise.cs</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Services/IMatchingService.cs</code> &nbsp;&bull;&nbsp;
@@ -401,15 +569,22 @@
   </div>
   <div class="speaker-body">
     <div class="files-box">
-      <strong>&#x1F4C2; Your files to commit &amp; push to Git:</strong>
+      <strong>&#x1F4C2; Your source code files to commit &amp; push to Git:</strong>
       <code>BlindMatchPAS/Views/Student/Submit.cshtml</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Views/Student/Dashboard.cshtml</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Views/Student/Edit.cshtml</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Views/Supervisor/Browse.cshtml</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Views/Supervisor/Dashboard.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/Supervisor/ProposalDetail.cshtml</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Views/Supervisor/ConfirmMatch.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/Supervisor/ConfirmedProposalDetail.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/Supervisor/ManageExpertise.cshtml</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Views/Admin/Dashboard.cshtml</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Views/Admin/Reassign.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/Admin/CreateUser.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/Admin/CreateResearchArea.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/Admin/ResearchAreas.cshtml</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Views/Admin/Users.cshtml</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/wwwroot/css/site.css</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/wwwroot/js/site.js</code>
     </div>
@@ -441,8 +616,7 @@
   </div>
   <div class="speaker-body">
     <div class="files-box">
-      <strong>&#x1F4C2; Your files to commit &amp; push to Git:</strong>
-      <code>GIT_COMMIT_HISTORY.sh</code> &nbsp;&bull;&nbsp;
+      <strong>&#x1F4C2; Your source code files to commit &amp; push to Git:</strong>
       <code>BlindMatchPAS/Data/ApplicationDbContext.cs</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Data/DbInitializer.cs</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Migrations/20260412141355_InitialCreate.cs</code> &nbsp;&bull;&nbsp;
@@ -467,7 +641,7 @@
   </div>
   <div class="speaker-body">
     <div class="files-box">
-      <strong>&#x1F4C2; Your files to commit &amp; push to Git:</strong>
+      <strong>&#x1F4C2; Your source code files to commit &amp; push to Git:</strong>
       <code>BlindMatchPAS.Tests/BlindMatchPAS.Tests.csproj</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS.Tests/Helpers/TestDbContextFactory.cs</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS.Tests/Helpers/MockUserManagerHelper.cs</code> &nbsp;&bull;&nbsp;
@@ -492,7 +666,7 @@
   </div>
   <div class="speaker-body">
     <div class="files-box">
-      <strong>&#x1F4C2; Your files to commit &amp; push to Git:</strong>
+      <strong>&#x1F4C2; Your source code files to commit &amp; push to Git:</strong>
       <code>BlindMatchPAS.Tests/Integration/DatabaseIntegrationTests.cs</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS.Tests/Integration/ProposalRepositoryTests.cs</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS.Tests/Mocks/SupervisorControllerMockTests.cs</code> &nbsp;&bull;&nbsp;
@@ -516,17 +690,17 @@
   </div>
   <div class="speaker-body">
     <div class="files-box">
-      <strong>&#x1F4C2; Your files to commit &amp; push to Git:</strong>
+      <strong>&#x1F4C2; Your source code files to commit &amp; push to Git:</strong>
       <code>BlindMatchPAS/Controllers/AdminController.cs</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Controllers/HomeController.cs</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/Controllers/ModuleLeaderController.cs</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Controllers/StudentController.cs</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/Controllers/SupervisorController.cs</code> &nbsp;&bull;&nbsp;
-      <code>BlindMatchPAS/Controllers/ModuleLeaderController.cs</code> &nbsp;&bull;&nbsp;
-      <code>BlindMatchPAS/Controllers/HomeController.cs</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/ViewModels/Admin/AdminViewModels.cs</code> &nbsp;&bull;&nbsp;
-      <code>BlindMatchPAS/ViewModels/Student/SubmitProposalViewModel.cs</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/ViewModels/ModuleLeader/ModuleLeaderViewModels.cs</code> &nbsp;&bull;&nbsp;
       <code>BlindMatchPAS/ViewModels/Student/ProposalStatusViewModel.cs</code> &nbsp;&bull;&nbsp;
-      <code>BlindMatchPAS/ViewModels/Supervisor/SupervisorViewModels.cs</code> &nbsp;&bull;&nbsp;
-      <code>BlindMatchPAS/ViewModels/ModuleLeader/ModuleLeaderViewModels.cs</code>
+      <code>BlindMatchPAS/ViewModels/Student/SubmitProposalViewModel.cs</code> &nbsp;&bull;&nbsp;
+      <code>BlindMatchPAS/ViewModels/Supervisor/SupervisorViewModels.cs</code>
     </div>
     <div class="cue">[SLIDE: 4-layer test summary table; then challenge list]</div>
     <p class="script">Thank you, [NAME 7]. Let me put the test suite in perspective.</p>
