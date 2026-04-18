@@ -72,10 +72,13 @@ git add BlindMatchPAS.Tests/Unit/MatchingServiceTests.cs
 git commit -m "test(unit): add MatchingService unit tests – blind match logic, interest and confirm flows"
 
 git add BlindMatchPAS.Tests/Unit/StudentControllerTests.cs
-git commit -m "test(unit): add StudentController unit tests with Moq UserManager"
+git commit -m "test(unit): add StudentController unit tests – submit, edit, withdraw, dashboard with Moq UserManager"
 
 git add BlindMatchPAS.Tests/Integration/ProposalRepositoryTests.cs
-git commit -m "test(integration): add proposal repository integration tests – full workflow and reassign"
+git commit -m "test(integration): add ProposalRepositoryTests – CRUD, status transitions, anonymity guard and expertise filter"
 
 git add BlindMatchPAS.Tests/Functional/BlindMatchUserJourneyTests.cs
-git commit -m "test(functional): add user journey tests – student, supervisor anonymity and admin flows"
+git commit -m "test(functional): add BlindMatchUserJourneyTests – 7 end-to-end journeys covering anonymity, reveal, reassign and role constraints"
+
+git add BlindMatchPAS/ViewModels/Admin/AdminViewModels.cs BlindMatchPAS/ViewModels/Student/SubmitProposalViewModel.cs
+git commit -m "feat(validation): add RegularExpression annotations to InstitutionId, Department and TechnicalStack fields"
