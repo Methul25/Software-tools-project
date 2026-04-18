@@ -18,6 +18,8 @@ namespace BlindMatchPAS.ViewModels.Student
 
         [Required(ErrorMessage = "Technical stack is required.")]
         [StringLength(500)]
+        [RegularExpression(@"^[A-Za-z][A-Za-z0-9 .#+,/()-]{0,499}$",
+            ErrorMessage = "Technical stack must start with a letter and may only contain letters, digits, spaces and common symbols (e.g. ASP.NET Core, Python 3, C++).")]
         [Display(Name = "Technical Stack")]
         public string TechnicalStack { get; set; } = string.Empty;
 

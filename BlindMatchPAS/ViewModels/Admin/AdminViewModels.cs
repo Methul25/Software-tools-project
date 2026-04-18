@@ -61,10 +61,14 @@ namespace BlindMatchPAS.ViewModels.Admin
         public string Email { get; set; } = string.Empty;
 
         [StringLength(20)]
+        [RegularExpression(@"^[A-Za-z]{1,3}\d{4,10}$",
+            ErrorMessage = "Institution ID must start with 1–3 letters followed by 4–10 digits (e.g. ST20240001).")]
         [Display(Name = "Student / Faculty ID")]
         public string? InstitutionId { get; set; }
 
         [StringLength(200)]
+        [RegularExpression(@"^[A-Za-z][A-Za-z0-9 &,()/-]{1,199}$",
+            ErrorMessage = "Department name must start with a letter and contain only letters, digits, spaces and common punctuation.")]
         [Display(Name = "Department")]
         public string? Department { get; set; }
 
