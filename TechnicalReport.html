@@ -140,7 +140,14 @@
   <ol>
     <li><a href="#s1">1 &nbsp; Introduction &amp; Development Environment</a></li>
     <li><a href="#s2">2 &nbsp; Blind-Match Logic and State Management</a></li>
-    <li><a href="#s3">3 &nbsp; Version Control Strategy</a></li>
+    <li><a href="#s3">3 &nbsp; Version Control Strategy</a>
+      <ol>
+        <li><a href="#s31">3.1 &nbsp; Conventional Commits</a></li>
+        <li><a href="#s32">3.2 &nbsp; Sprint-Driven Commit Flow</a></li>
+        <li><a href="#s33">3.3 &nbsp; Dependency Injection and Clean Architecture</a></li>
+        <li><a href="#s34">3.4 &nbsp; Repository File Inventory</a></li>
+      </ol>
+    </li>
     <li><a href="#s4">4 &nbsp; Testing Strategy and Critical Analysis</a>
       <ol>
         <li><a href="#s41">4.1 &nbsp; Overview and Tool Selection</a></li>
@@ -235,13 +242,13 @@ Assert.Null(proposals[0].Student); // anonymity enforced</pre>
 <!-- ══════════════════════════════ SECTION 3 ══════════════════════════════ -->
 <h2 id="s3">3. Version Control Strategy</h2>
 
-<h3>3.1 Conventional Commits</h3>
+<h3 id="s31">3.1 Conventional Commits</h3>
 
 <p>The project adopted the <em>Conventional Commits 1.0.0</em> specification for all commit messages. Each message follows the format <code>&lt;type&gt;(&lt;scope&gt;): &lt;description&gt;</code>. Types used are: <code>feat</code> (new feature), <code>fix</code> (bug correction), <code>test</code> (test additions), <code>chore</code> (tooling/config), and <code>refactor</code> (non-functional restructuring). The scope component identifies the architectural layer affected: <code>models</code>, <code>db</code>, <code>service</code>, <code>controller</code>, <code>ui</code>, and <code>test</code>.</p>
 
 <p>This convention was chosen because it: (1) makes the commit log machine-readable and compatible with automated changelog generation tools such as <code>conventional-changelog</code>; (2) forces contributors to reason about the <em>type</em> of change they are making before committing, reducing mixed-concern commits; and (3) produces a log that directly maps to the feature delivery timeline reviewers can follow.</p>
 
-<h3>3.2 Sprint-Driven Commit Flow</h3>
+<h3 id="s32">3.2 Sprint-Driven Commit Flow</h3>
 
 <p>Development was organised into six sprints, each with a clear deliverable and a corresponding cluster of commits. The commit log (<code>GIT_COMMIT_HISTORY.sh</code>) demonstrates the following progression:</p>
 
@@ -257,9 +264,117 @@ Assert.Null(proposals[0].Student); // anonymity enforced</pre>
 
 <p>This granular, sprint-gated approach ensures that every logical layer is independently verifiable in version history. If a regression is introduced at the service layer, <code>git bisect</code> can identify the exact commit responsible by replaying history sprint by sprint.</p>
 
-<h3>3.3 Dependency Injection and Clean Architecture</h3>
+<h3 id="s33">3.3 Dependency Injection and Clean Architecture</h3>
 
 <p>The architectural decision to register <code>IMatchingService</code> as a scoped service in <code>Program.cs</code> (<code>builder.Services.AddScoped&lt;IMatchingService, MatchingService&gt;()</code>) directly supports version control cleanliness: because all matching logic lives in one service class rather than scattered across controllers, future changes to the business rules require editing a single file. This minimises diff noise across branches and reduces the risk of merge conflicts on controller files.</p>
+
+<h3 id="s34">3.4 Repository File Inventory</h3>
+
+<p>The following table enumerates every file tracked by Git in this repository (output of <code>git ls-files</code> at HEAD <code>80eeda5</code>). Files are grouped by architectural layer. Build artefacts (<code>bin/</code>, <code>obj/</code>), the SQLite database file (<code>*.db</code>), and user-secrets are excluded from tracking via <code>.gitignore</code> and must never be committed.</p>
+
+<table class="data">
+  <tr><th>Layer / Category</th><th>File Path</th></tr>
+
+  <tr><td><strong>Solution &amp; Config</strong></td><td><code>.gitignore</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS.sln</code></td></tr>
+  <tr><td></td><td><code>README.md</code></td></tr>
+  <tr><td></td><td><code>GIT_COMMIT_HISTORY.sh</code></td></tr>
+  <tr><td></td><td><code>TechnicalReport.html</code></td></tr>
+
+  <tr><td><strong>Application Project</strong></td><td><code>BlindMatchPAS/BlindMatchPAS.csproj</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Program.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/appsettings.json</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/appsettings.Development.json</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/ScaffoldingReadMe.txt</code></td></tr>
+
+  <tr><td><strong>Domain Models</strong></td><td><code>BlindMatchPAS/Models/ApplicationUser.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Models/ProjectMatch.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Models/ProjectProposal.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Models/ProposalStatus.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Models/ResearchArea.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Models/SupervisorExpertise.cs</code></td></tr>
+
+  <tr><td><strong>Data / EF Core</strong></td><td><code>BlindMatchPAS/Data/ApplicationDbContext.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Data/DbInitializer.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Migrations/20260412141355_InitialCreate.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Migrations/20260412141355_InitialCreate.Designer.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Migrations/ApplicationDbContextModelSnapshot.cs</code></td></tr>
+
+  <tr><td><strong>Service Layer</strong></td><td><code>BlindMatchPAS/Services/IMatchingService.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Services/MatchingService.cs</code></td></tr>
+
+  <tr><td><strong>Controllers</strong></td><td><code>BlindMatchPAS/Controllers/AdminController.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Controllers/HomeController.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Controllers/ModuleLeaderController.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Controllers/StudentController.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Controllers/SupervisorController.cs</code></td></tr>
+
+  <tr><td><strong>ViewModels</strong></td><td><code>BlindMatchPAS/ViewModels/Admin/AdminViewModels.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/ViewModels/ModuleLeader/ModuleLeaderViewModels.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/ViewModels/Student/ProposalStatusViewModel.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/ViewModels/Student/SubmitProposalViewModel.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/ViewModels/Supervisor/SupervisorViewModels.cs</code></td></tr>
+
+  <tr><td><strong>Views — Shared</strong></td><td><code>BlindMatchPAS/Views/_ViewImports.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/_ViewStart.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Shared/_AuthLayout.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Shared/_Layout.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Shared/_LoginPartial.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Shared/_ValidationScriptsPartial.cshtml</code></td></tr>
+
+  <tr><td><strong>Views — Home</strong></td><td><code>BlindMatchPAS/Views/Home/Index.cshtml</code></td></tr>
+
+  <tr><td><strong>Views — Student</strong></td><td><code>BlindMatchPAS/Views/Student/Dashboard.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Student/Edit.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Student/Submit.cshtml</code></td></tr>
+
+  <tr><td><strong>Views — Supervisor</strong></td><td><code>BlindMatchPAS/Views/Supervisor/Browse.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Supervisor/ConfirmedProposalDetail.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Supervisor/ConfirmMatch.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Supervisor/Dashboard.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Supervisor/ManageExpertise.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Supervisor/ProposalDetail.cshtml</code></td></tr>
+
+  <tr><td><strong>Views — Admin</strong></td><td><code>BlindMatchPAS/Views/Admin/CreateResearchArea.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Admin/CreateUser.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Admin/Dashboard.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Admin/Reassign.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Admin/ResearchAreas.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/Admin/Users.cshtml</code></td></tr>
+
+  <tr><td><strong>Views — Module Leader</strong></td><td><code>BlindMatchPAS/Views/ModuleLeader/CreateResearchArea.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/ModuleLeader/CreateUser.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/ModuleLeader/Dashboard.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/ModuleLeader/Reassign.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/ModuleLeader/ResearchAreas.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Views/ModuleLeader/Users.cshtml</code></td></tr>
+
+  <tr><td><strong>Identity Area</strong></td><td><code>BlindMatchPAS/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Areas/Identity/Pages/_ViewImports.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Areas/Identity/Pages/_ViewStart.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Areas/Identity/Pages/Account/_ViewImports.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Areas/Identity/Pages/Account/Login.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Areas/Identity/Pages/Account/Login.cshtml.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Areas/Identity/Pages/Account/Register.cshtml</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/Areas/Identity/Pages/Account/Register.cshtml.cs</code></td></tr>
+
+  <tr><td><strong>Static Assets</strong></td><td><code>BlindMatchPAS/wwwroot/css/site.css</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS/wwwroot/js/site.js</code></td></tr>
+
+  <tr><td><strong>Test Project</strong></td><td><code>BlindMatchPAS.Tests/BlindMatchPAS.Tests.csproj</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS.Tests/Helpers/MockUserManagerHelper.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS.Tests/Helpers/TestDbContextFactory.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS.Tests/Unit/MatchingServiceTests.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS.Tests/Unit/StudentControllerTests.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS.Tests/Integration/DatabaseIntegrationTests.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS.Tests/Integration/ProposalRepositoryTests.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS.Tests/Mocks/SupervisorControllerMockTests.cs</code></td></tr>
+  <tr><td></td><td><code>BlindMatchPAS.Tests/Functional/BlindMatchUserJourneyTests.cs</code></td></tr>
+</table>
+
+<div class="note">
+  <strong>Files intentionally excluded from Git (<code>.gitignore</code>):</strong> <code>bin/</code>, <code>obj/</code>, <code>*.db</code> (SQLite database), <code>*.db-shm</code>, <code>*.db-wal</code>, <code>Properties/launchSettings.json</code>, and any <code>appsettings.*.json</code> files containing secrets. The SQLite database is regenerated automatically from the EF Core migration and <code>DbInitializer</code> on first run &mdash; it must never be committed as it contains seeded password hashes and personal test data.
+</div>
 
 <!-- ══════════════════════════════ SECTION 4 ══════════════════════════════ -->
 <h2 id="s4">4. Testing Strategy and Critical Analysis</h2>
