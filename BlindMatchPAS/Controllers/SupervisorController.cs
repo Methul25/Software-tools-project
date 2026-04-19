@@ -136,15 +136,19 @@ namespace BlindMatchPAS.Controllers
         {
             var supervisorId = _userManager.GetUserId(User)!;
             var match = await _context.ProjectMatches
-                .Include(m => m.Proposal)
+                .Include(m => m.Proposal).ThenInclude(p => p!.ResearchArea)
                 .FirstOrDefaultAsync(m => m.ProposalId == proposalId && m.SupervisorId == supervisorId);
 
             if (match == null || match.IsRevealed) return NotFound();
 
             var vm = new ConfirmMatchViewModel
             {
-                ProposalId = proposalId,
-                ProposalTitle = match.Proposal?.Title ?? string.Empty
+                ProposalId    = proposalId,
+                ProposalTitle = match.Proposal?.Title ?? string.Empty,
+                Abstract      = match.Proposal?.Abstract ?? string.Empty,
+                TechnicalStack = match.Proposal?.TechnicalStack ?? string.Empty,
+                ResearchAreaName = match.Proposal?.ResearchArea?.Name ?? string.Empty,
+                SubmittedAt   = match.Proposal?.SubmittedAt ?? DateTime.UtcNow
             };
             return View(vm);
         }

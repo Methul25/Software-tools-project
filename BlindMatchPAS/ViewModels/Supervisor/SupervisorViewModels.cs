@@ -21,6 +21,12 @@ namespace BlindMatchPAS.ViewModels.Supervisor
         public int ProposalId { get; set; }
         public string ProposalTitle { get; set; } = string.Empty;
         public string? Note { get; set; }
+
+        // Proposal detail fields for inline modal
+        public string Abstract { get; set; } = string.Empty;
+        public string TechnicalStack { get; set; } = string.Empty;
+        public string ResearchAreaName { get; set; } = string.Empty;
+        public DateTime SubmittedAt { get; set; }
     }
 
     public class RevealedMatchViewModel
